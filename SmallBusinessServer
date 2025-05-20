@@ -646,7 +646,6 @@ def main():
 
         # Accepting clients
         while True:
-            print("hi")
             client_socket, addr = server_socket.accept()
             print(f"Connection from {addr}")
 
