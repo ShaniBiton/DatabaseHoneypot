@@ -269,7 +269,7 @@ class TextPage(tk.Frame):
         super().__init__(parent)
         self.controller = controller
         self.configure(bg="#FEF3E2")
-        tk.Label(self, text="Text Page", font=("Helvetica", 20), bg="#FEF3E2").pack(pady=10)
+        tk.Label(self, text="Profile", font=("Helvetica", 20), bg="#FEF3E2").pack(pady=10)
 
         self.labels = []
         for _ in range(4):
