@@ -281,9 +281,21 @@ class TextPage(tk.Frame):
                   command=lambda: controller.show_frame("MainMenu"), bg="#ffefd6").pack(pady=20)
 
     def update_texts(self):
-        for i in range(4):
-            msg = ServerHandling.receive_message(self.controller.client_socket, self.controller.server_aes_key)
-            self.labels[i].config(text=msg)
+        client_id = ServerHandling.receive_message(self.controller.client_socket, self.controller.server_aes_key)
+        msg1 = f"ID: {client_id}"
+        self.labels[0].config(text=msg1)
+
+        client_username = ServerHandling.receive_message(self.controller.client_socket, self.controller.server_aes_key)
+        msg2 = f"Username: {client_username}"
+        self.labels[1].config(text=msg2)
+
+        client_password = ServerHandling.receive_message(self.controller.client_socket, self.controller.server_aes_key)
+        msg3 = f"Password: {client_password}"
+        self.labels[2].config(text=msg3)
+
+        client_full_name = ServerHandling.receive_message(self.controller.client_socket, self.controller.server_aes_key)
+        msg4 = f"Full Name: {client_full_name}"
+        self.labels[3].config(text=msg4)
 
 
 # ---------- Simple Form App ----------
@@ -292,7 +304,7 @@ class SimpleFormPage(tk.Frame):
         super().__init__(parent)
         self.controller = controller
         self.configure(bg="#FEF3E2")
-        tk.Label(self, text="Simple Form", font=("Helvetica", 20), bg="#FEF3E2").pack(pady=20)
+        tk.Label(self, text="Sign Up", font=("Helvetica", 20), bg="#FEF3E2").pack(pady=20)
 
         self.entries = {}
         fields = ["ID", "Full Name", "Username", "Password"]
@@ -306,9 +318,6 @@ class SimpleFormPage(tk.Frame):
             self.entries[field] = entry
 
         tk.Button(self, text="Submit", font=("Helvetica", 12), command=self.submit_form, bg="#ffefd6").pack(pady=20)
-        tk.Button(self, text="Back to Launcher", font=("Helvetica", 12),
-                  command=lambda: controller.show_frame("MainLauncherPage"), bg="#ffefd6").pack()
-
     def submit_form(self):
         data = {field: entry.get() for field, entry in self.entries.items()}
         summary = "\n".join([f"{k}: {v}" for k, v in data.items()])
