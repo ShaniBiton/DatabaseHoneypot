@@ -1,1 +1,2 @@
 # DatabaseHoneypot
+HoneyStats - example database.
