@@ -23,7 +23,13 @@ ARCHIVE_DIR = "archive"
 os.makedirs(ARCHIVE_DIR, exist_ok=True)
 
 
+# Creating the user interface for the dahsboard
 class HoneypotApp(tk.Tk):
+    """
+    Input: self
+    Out: None
+    Creates the Tkinter app dor the dashboard - builder function of the app
+    """
     def __init__(self):
         super().__init__()
         self.title("Honeypot App")
@@ -40,18 +46,30 @@ class HoneypotApp(tk.Tk):
 
         self.show_welcome_screen()
 
-    # Closing function after the user clicks on the x
+    """ 
+    Parameters: None (self)
+    Returns: None
+    Purpose: Closes the app after user clicks on X
+    """
     def on_exit(self):
         plt.close('all')
         self.destroy()
         exit()
 
-    # A function responsible for clearing the screen from widgets
+    """ 
+    Parameters: None (self)
+    Returns: None
+    Purpose: Clears the screen from widgets
+    """
     def clear_container(self):
         for widget in self.container.winfo_children():
             widget.destroy()
 
-    # Welcome Screen
+    """ 
+    Parameters: None (self)
+    Returns: None
+    Purpose: Creates the Welcome page for the app
+    """
     def show_welcome_screen(self):
         self.clear_container()
 
@@ -89,7 +107,11 @@ class HoneypotApp(tk.Tk):
                                style="Custom.TButton")
         start_btn.pack(pady=(10, 40))
 
-    # Dashboard
+    """ 
+    Parameters: None (self)
+    Returns: None
+    Purpose: Creates the dashboard, with the 5 graphs
+    """
     def show_dashboard(self):
         try:
             self.clear_container()
@@ -159,8 +181,12 @@ class HoneypotApp(tk.Tk):
             exit()
 
 
-
 class Analysis:
+    """
+    Parameters: None
+    Returns: None
+    Purpose: Goes over the connection_logs analyzes interaction and updates the Honeypot's database
+    """
     @staticmethod
     def interactions_analysis():
         try:
@@ -196,6 +222,11 @@ class Analysis:
         except Exception as e:
             print(e)
 
+    """ 
+    Parameters: None
+    Returns: None
+    Purpose: Goes over the error_logs analyzes errors and updates the Honeypot's database
+    """
     @staticmethod
     def error_analysis():
         try:
@@ -230,6 +261,12 @@ class Analysis:
         except Exception as e:
             print(e)
 
+    """ 
+    Parameters: None
+    Returns: None
+    Purpose: Goes over the interaction_logs and connection_logs identifies and analyzes attacks 
+    and updates the Honeypot's database
+    """
     @staticmethod
     def attack_analysis():
         try:
@@ -384,7 +421,7 @@ class Analysis:
                         "end_time": ip_windows[ip][-1].strftime("%Y-%m-%d %H:%M:%S"),
                         "requests_count": len(ip_windows[ip])
                     })
-                    # Optional: clear deque to avoid multiple logs of same burst
+                    # Clear deque to avoid multiple logs of same burst
                     ip_windows[ip].clear()
 
             # Result
@@ -441,6 +478,11 @@ class Analysis:
         except Exception as e:
             print(e)
 
+    """ 
+    Parameters: None
+    Returns: None
+    Purpose: Creates the honeypot's database and the JSON file database_hits.json
+    """
     @staticmethod
     def establish_database():
         try:
@@ -501,6 +543,12 @@ class Analysis:
         except Exception as e:
             print(e)
 
+    """ 
+    Parameters: None
+    Returns: None
+    Purpose: Transfers logs from the logs directory to the archive directory. Used after the system went over the logs
+     - for records keeping and making sure there wouldn't be duble cases
+    """
     @staticmethod
     def archive_logs():
         try:
@@ -569,7 +617,13 @@ class Analysis:
             print(e)
 
 
+# Creating the Graphs
 class GraphsCharts:
+    """
+    Parameters: None
+    Returns: a Figure object for graph creation
+    Purpose: Extracts data from the database and turns into Figure object for graph creation - interaction_over_time
+    """
     @staticmethod
     # First graph - Interactions Over Time
     def interactions_over_time():
@@ -604,6 +658,11 @@ class GraphsCharts:
         except sqlite3.error as e:
             print(e)
 
+    """ 
+    Parameters: None
+    Returns: a Figure object for graph creation
+    Purpose: Extracts data from the database and turns into Figure object for graph creation - error_distribution
+    """
     @staticmethod
     # Second graph: Error distribution
     def error_types():
@@ -637,6 +696,11 @@ class GraphsCharts:
         except Exception as e:
             print(e)
 
+    """ 
+    Parameters: None
+    Returns: a Figure object for graph creation
+    Purpose: Extracts data from the database and turns into Figure object for graph creation - attack_types
+    """
     @staticmethod
     # Third graph: Attack Types
     def attack_types():
@@ -682,6 +746,12 @@ class GraphsCharts:
         except Exception as e:
             print(e)
 
+    """ 
+    Parameters: None
+    Returns: a Figure object for graph creation
+    Purpose: Extracts data from the JSON file database_hits.json and turns into Figure object for graph creation - 
+    database_hits
+    """
     @staticmethod
     # Forth graph: Database Hits
     def database_hitss():
@@ -733,6 +803,11 @@ class GraphsCharts:
         except Exception as e:
             print(e)
 
+    """ 
+    Parameters: None
+    Returns: a Figure object for graph creation
+    Purpose: Extracts data from the database and turns into Figure object for graph creation - attack_dis_over_time
+    """
     @staticmethod
     # Fifth graph: Attack Distribution Over Time
     def attack_dis_over_time():
@@ -787,6 +862,12 @@ class GraphsCharts:
 
 
 class HelperFunctions:
+    """
+    Parameters: sus_inputs - list of strings, rg_pattern - list of strings, input_txt - string
+    Returns: Bool - True / False
+    Purpose: Checks for suspicious payloads correlating to a certain attack, matches patterns using regex search,
+     returns whether an attack was identified
+    """
     @staticmethod
     def payload_detector(sus_inputs, rg_pattern, input_txt):
         print(input_txt)
@@ -801,7 +882,12 @@ class HelperFunctions:
     @staticmethod
     def parse_timestamp(ts):
         return datetime.strptime(ts, "%Y-%m-%d %H:%M:%S")
-
+    
+    """
+    Parameters: first_time - DateTime object, second_time - DateTime object
+    Returns: int
+    Purpose: Returns time difference in seconds
+    """
     @staticmethod
     def time_difference(first_time, second_time):
         time_in_sec1 = int(first_time[11:13])*3600 + int(first_time[14:16])*60 + int(first_time[17:])
